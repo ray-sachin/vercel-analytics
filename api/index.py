@@ -10,6 +10,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
+    allow_credentials=False,
     allow_methods=['POST'],
     allow_headers=['*'],
 )
@@ -36,4 +37,5 @@ async def analytics(request: Request):
                 'avg_uptime': float(np.mean(uptimes)),
                 'breaches': breaches
             }
+
     return result
