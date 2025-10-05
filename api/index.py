@@ -6,18 +6,20 @@ import os
 
 app = FastAPI()
 
-# Enable CORS for all origins and all methods (including OPTIONS and GET)
+# Enable CORS for ALL origins and ALL HTTP methods
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
     allow_credentials=False,
-    allow_methods=['*'],
+    allow_methods=['*'],  # Allow POST, GET, OPTIONS, etc.
     allow_headers=['*'],
 )
 
+# Load telemetry data
 with open(os.path.join(os.path.dirname(__file__), '..', 'q-vercel-latency.json'), 'r') as f:
     entries = json.load(f)
 
+# POST endpoint for analytics
 @app.post("/")
 async def analytics(request: Request):
     data = await request.json()
@@ -38,7 +40,7 @@ async def analytics(request: Request):
             }
     return result
 
-# Add optional handler for GET/OPTIONS at root for grader/browser
+# Optional: Allow GET on root so browser doesn't show "Method Not Allowed"
 @app.get("/")
 async def root():
     return {"message": "Vercel Analytics POST endpoint is available here."}
